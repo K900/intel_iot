@@ -1,7 +1,7 @@
-from libintel.board.generic import Board
-from libintel.pinmodes.analogue import Analogue
-from libintel.pinmodes.gpio import GpioIn, GpioOut
-from libintel.pinmodes.pwm import Pwm
+from intel_iot.board.generic import Board
+from intel_iot.pinmodes.analogue import Analogue
+from intel_iot.pinmodes.gpio import GpioIn, GpioOut
+from intel_iot.pinmodes.pwm import Pwm
 
 ANALOGUE_DEPENDS = {
     10: "gpio_in",

@@ -1,12 +1,12 @@
 import logging
 import os.path
 
-from libintel.util.file import write_ignore_busy, write_file, read_file
+from intel_iot.util.file import write_ignore_busy, write_file, read_file
 
 DIRECTION_IN = "in"
 DIRECTION_OUT = "out"
 
-log = logging.getLogger("libintel.util.gpio")
+log = logging.getLogger("intel_iot.util.gpio")
 
 
 def _make_path(pin, option):

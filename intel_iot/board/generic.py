@@ -1,5 +1,5 @@
-from libintel.util import gpio
-from libintel.util.file import write_file
+from intel_iot.util import gpio
+from intel_iot.util.file import write_file
 
 
 def apply_mux(conf):

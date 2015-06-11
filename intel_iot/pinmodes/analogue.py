@@ -1,6 +1,6 @@
 # A Hate Story
-from libintel.util import gpio
-from libintel.util.file import read_file
+from intel_iot.util import gpio
+from intel_iot.util.file import read_file
 
 
 class Analogue:

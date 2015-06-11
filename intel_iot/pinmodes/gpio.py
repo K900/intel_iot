@@ -1,4 +1,4 @@
-from libintel.util import gpio
+from intel_iot.util import gpio
 
 
 class _GpioBase:
