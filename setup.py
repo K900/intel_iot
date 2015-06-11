@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='intel_iot',
     description = ('A library for interfacing with Intel IoT hardware based on the Quark SoC from Python 3.'),
-    long_description = read('README.md'),
+    long_description = open('README.md').read(),
     version='0.1.0',
     packages=find_packages(),
     entry_points={
