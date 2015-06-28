@@ -9,7 +9,7 @@ class Pin:
         self._reconfigure()
 
     def _reconfigure(self):
-        self._conf = board.configure(self._pin, "gpio_" + self._direction)
+        self._conf = board.setup(self._pin, "gpio_" + self._direction)
 
     def mode(self, mode):
         assert mode in ('in', 'out')

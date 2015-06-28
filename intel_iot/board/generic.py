@@ -18,7 +18,7 @@ DRIVERS = {
 }
 
 class Board:
-    def configure(self, pin, mode):
+    def setup(self, pin, mode):
         def _apply_mux(conf):
             for pair in conf.items():
                 gpio.configure_out(*pair)
@@ -42,7 +42,7 @@ class Board:
         # FUCK FUCK FUCK FUCK FUCK FUCK FUCK FUCK FUCK
         depends = mode_config.get("depends", {})
         for pair in depends.items():
-            self.configure(*pair)
+            self.setup(*pair)
         # END FUCK
 
         gpio_pin = pin_config["gpio_pin"]
