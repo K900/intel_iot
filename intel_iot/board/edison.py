@@ -1,13 +1,10 @@
-from intel_iot.board.generic import Board
-from intel_iot.pinmodes.analogue import Analogue
-from intel_iot.pinmodes.gpio import GpioIn, GpioOut
-from intel_iot.pinmodes.pwm import Pwm
+from intel_iot.board.generic import Board, GPIO_OUT, GPIO_IN, PWM, ADC
 
 ANALOGUE_DEPENDS = {
-    10: "gpio_in",
-    11: "gpio_in",
-    12: "gpio_in",
-    13: "gpio_in"
+    10: GPIO_IN,
+    11: GPIO_IN,
+    12: GPIO_IN,
+    13: GPIO_IN
 }
 
 PIN_CONFIG = {
@@ -23,30 +20,21 @@ PIN_CONFIG = {
             "out_pin": 248,
             "pullup_pin": 216,
 
-            "pin_modes": {
-                "gpio_in": {"class": GpioIn},
-                "gpio_out": {"class": GpioOut},
-            }
+            "pin_modes": [GPIO_IN, GPIO_OUT]
         },
         1: {
             "gpio_pin": 131,
             "out_pin": 249,
             "pullup_pin": 217,
 
-            "pin_modes": {
-                "gpio_in": {"class": GpioIn},
-                "gpio_out": {"class": GpioOut},
-            }
+            "pin_modes": [GPIO_IN, GPIO_OUT]
         },
         2: {
             "gpio_pin": 128,
             "out_pin": 250,
             "pullup_pin": 218,
 
-            "pin_modes": {
-                "gpio_in": {"class": GpioIn},
-                "gpio_out": {"class": GpioOut},
-            }
+            "pin_modes": [GPIO_IN, GPIO_OUT]
         },
         3: {
             "gpio_pin": 12,
@@ -54,10 +42,9 @@ PIN_CONFIG = {
             "pullup_pin": 219,
 
             "pin_modes": {
-                "gpio_in": {"class": GpioIn},
-                "gpio_out": {"class": GpioOut},
-                "pwm": {
-                    "class": Pwm,
+                GPIO_IN: {},
+                GPIO_OUT: {},
+                PWM: {
                     "pin_mode": 1,
                     "pwm_id": 0
                 }
@@ -68,10 +55,7 @@ PIN_CONFIG = {
             "out_pin": 252,
             "pullup_pin": 220,
 
-            "pin_modes": {
-                "gpio_in": {"class": GpioIn},
-                "gpio_out": {"class": GpioOut},
-            }
+            "pin_modes": [GPIO_IN, GPIO_OUT]
         },
         5: {
             "gpio_pin": 13,
@@ -79,10 +63,9 @@ PIN_CONFIG = {
             "pullup_pin": 221,
 
             "pin_modes": {
-                "gpio_in": {"class": GpioIn},
-                "gpio_out": {"class": GpioOut},
-                "pwm": {
-                    "class": Pwm,
+                GPIO_IN: {},
+                GPIO_OUT: {},
+                PWM: {
                     "pin_mode": 1,
                     "pwm_id": 1
                 }
@@ -94,10 +77,9 @@ PIN_CONFIG = {
             "pullup_pin": 222,
 
             "pin_modes": {
-                "gpio_in": {"class": GpioIn},
-                "gpio_out": {"class": GpioOut},
-                "pwm": {
-                    "class": Pwm,
+                GPIO_IN: {},
+                GPIO_OUT: {},
+                PWM: {
                     "pin_mode": 1,
                     "pwm_id": 2
                 }
@@ -108,20 +90,14 @@ PIN_CONFIG = {
             "out_pin": 255,
             "pullup_pin": 223,
 
-            "pin_modes": {
-                "gpio_in": {"class": GpioIn},
-                "gpio_out": {"class": GpioOut},
-            }
+            "pin_modes": [GPIO_IN, GPIO_OUT]
         },
         8: {
             "gpio_pin": 49,
             "out_pin": 256,
             "pullup_pin": 224,
 
-            "pin_modes": {
-                "gpio_in": {"class": GpioIn},
-                "gpio_out": {"class": GpioOut},
-            }
+            "pin_modes": [GPIO_IN, GPIO_OUT]
         },
         9: {
             "gpio_pin": 183,
@@ -129,10 +105,9 @@ PIN_CONFIG = {
             "pullup_pin": 225,
 
             "pin_modes": {
-                "gpio_in": {"class": GpioIn},
-                "gpio_out": {"class": GpioOut},
-                "pwm": {
-                    "class": Pwm,
+                GPIO_IN: {},
+                GPIO_OUT: {},
+                PWM: {
                     "pin_mode": 1,
                     "pwm_id": 3
                 }
@@ -144,22 +119,9 @@ PIN_CONFIG = {
             "pullup_pin": 226,
 
             "pin_modes": {
-                "gpio_in": {
-                    "class": GpioIn,
-                    "mux": {
-                        263: 1,
-                        240: 0
-                    }
-                },
-                "gpio_out": {
-                    "class": GpioOut,
-                    "mux": {
-                        263: 1,
-                        240: 0
-                    }
-                },
-                "pwm": {
-                    "class": Pwm,
+                GPIO_IN: {"mux": {263: 1, 240: 0}},
+                GPIO_OUT: {"mux": {263: 1, 240: 0}},
+                PWM: {
                     "pin_mode": 1,
                     "pwm_id": 3,
                     "mux": {
@@ -174,22 +136,9 @@ PIN_CONFIG = {
             "pullup_pin": 227,
 
             "pin_modes": {
-                "gpio_in": {
-                    "class": GpioIn,
-                    "mux": {
-                        262: 1,
-                        241: 0
-                    }
-                },
-                "gpio_out": {
-                    "class": GpioOut,
-                    "mux": {
-                        262: 1,
-                        241: 0
-                    }
-                },
-                "pwm": {
-                    "class": Pwm,
+                GPIO_IN: {"mux": {262: 1, 241: 0}},
+                GPIO_OUT: {"mux": {262: 1, 241: 0}},
+                PWM: {
                     "pin_mode": 1,
                     "pwm_id": 3,
                     "mux": {
@@ -204,18 +153,8 @@ PIN_CONFIG = {
             "pullup_pin": 228,
 
             "pin_modes": {
-                "gpio_in": {
-                    "class": GpioIn,
-                    "mux": {
-                        242: 0
-                    }
-                },
-                "gpio_out": {
-                    "class": GpioOut,
-                    "mux": {
-                        242: 0
-                    }
-                }
+                GPIO_IN: {"mux": {242: 0}},
+                GPIO_OUT: {"mux": {242: 0}}
             }
         },
         13: {
@@ -224,18 +163,8 @@ PIN_CONFIG = {
             "pullup_pin": 229,
 
             "pin_modes": {
-                "gpio_in": {
-                    "class": GpioIn,
-                    "mux": {
-                        243: 0
-                    }
-                },
-                "gpio_out": {
-                    "class": GpioOut,
-                    "mux": {
-                        243: 0
-                    }
-                }
+                GPIO_IN: {"mux": {243: 0}},
+                GPIO_OUT: {"mux": {243: 0}}
             }
         },
         14: {
@@ -244,20 +173,9 @@ PIN_CONFIG = {
             "pullup_pin": 208,
 
             "pin_modes": {
-                "gpio_in": {
-                    "class": GpioIn,
-                    "mux": {
-                        200: 0
-                    }
-                },
-                "gpio_out": {
-                    "class": GpioOut,
-                    "mux": {
-                        200: 0
-                    }
-                },
-                "analogue": {
-                    "class": Analogue,
+                GPIO_IN: {"mux": {200: 0}},
+                GPIO_OUT: {"mux": {200: 0}},
+                ADC: {
                     "mux": {
                         200: 1
                     },
@@ -273,20 +191,9 @@ PIN_CONFIG = {
             "pullup_pin": 209,
 
             "pin_modes": {
-                "gpio_in": {
-                    "class": GpioIn,
-                    "mux": {
-                        201: 0
-                    }
-                },
-                "gpio_out": {
-                    "class": GpioOut,
-                    "mux": {
-                        201: 0
-                    }
-                },
-                "analogue": {
-                    "class": Analogue,
+                GPIO_IN: {"mux": {201: 0}},
+                GPIO_OUT: {"mux": {201: 0}},
+                ADC: {
                     "mux": {
                         201: 1
                     },
@@ -301,20 +208,9 @@ PIN_CONFIG = {
             "pullup_pin": 210,
 
             "pin_modes": {
-                "gpio_in": {
-                    "class": GpioIn,
-                    "mux": {
-                        202: 0
-                    }
-                },
-                "gpio_out": {
-                    "class": GpioOut,
-                    "mux": {
-                        202: 0
-                    }
-                },
-                "analogue": {
-                    "class": Analogue,
+                GPIO_IN: {"mux": {202: 0}},
+                GPIO_OUT: {"mux": {202: 0}},
+                ADC: {
                     "mux": {
                         202: 1
                     },
@@ -329,20 +225,9 @@ PIN_CONFIG = {
             "pullup_pin": 211,
 
             "pin_modes": {
-                "gpio_in": {
-                    "class": GpioIn,
-                    "mux": {
-                        203: 0
-                    }
-                },
-                "gpio_out": {
-                    "class": GpioOut,
-                    "mux": {
-                        203: 0
-                    }
-                },
-                "analogue": {
-                    "class": Analogue,
+                GPIO_IN: {"mux": {203: 0}},
+                GPIO_OUT: {"mux": {203: 0}},
+                ADC: {
                     "mux": {
                         203: 1
                     },
@@ -357,20 +242,9 @@ PIN_CONFIG = {
             "pullup_pin": 212,
 
             "pin_modes": {
-                "gpio_in": {
-                    "class": GpioIn,
-                    "mux": {
-                        204: 0
-                    }
-                },
-                "gpio_out": {
-                    "class": GpioOut,
-                    "mux": {
-                        204: 0
-                    }
-                },
-                "analogue": {
-                    "class": Analogue,
+                GPIO_IN: {"mux": {204: 0}},
+                GPIO_OUT: {"mux": {204: 0}},
+                ADC: {
                     "mux": {
                         204: 1
                     },
@@ -385,20 +259,9 @@ PIN_CONFIG = {
             "pullup_pin": 213,
 
             "pin_modes": {
-                "gpio_in": {
-                    "class": GpioIn,
-                    "mux": {
-                        205: 0
-                    }
-                },
-                "gpio_out": {
-                    "class": GpioOut,
-                    "mux": {
-                        205: 0
-                    }
-                },
-                "analogue": {
-                    "class": Analogue,
+                GPIO_IN: {"mux": {205: 0}},
+                GPIO_OUT: {"mux": {205: 0}},
+                ADC: {
                     "mux": {
                         205: 1
                     },

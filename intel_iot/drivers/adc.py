@@ -3,7 +3,7 @@ from intel_iot.util import gpio
 from intel_iot.util.file import read_file
 
 
-class Analogue:
+class Adc:
     def __init__(self, pin_config):
         gpio.configure_out(pin_config["out_pin"])
         gpio.configure_in(pin_config["pullup_pin"])
