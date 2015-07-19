@@ -3,7 +3,10 @@ from intel_iot.util import gpio
 from intel_iot.util.file import read_file
 
 
-class Adc:
+class EdisonArduinoAdc:
+    """
+    Intel Edison Arduino board ADC driver. May be useful for other IIO devices, too.
+    """
     def __init__(self, pin_config):
         gpio.configure_out(pin_config["out_pin"])
         gpio.configure_in(pin_config["pullup_pin"])
@@ -13,4 +16,8 @@ class Adc:
 
     @property
     def value(self):
+        """
+        Reads the raw value from the ADC.
+        :return: Raw ADC reading (0-4096).
+        """
         return int(read_file(self._sysfs_path))

@@ -1,4 +1,9 @@
-from intel_iot.board.generic import Board, GPIO_OUT, GPIO_IN, PWM, ADC
+from intel_iot.board.generic import Board, GPIO_OUT, GPIO_IN, PWM, ADC, I2C
+from intel_iot.drivers.arduino.adc import EdisonArduinoAdc
+from intel_iot.drivers.arduino.gpio import EdisonArduinoGpioIn, EdisonArduinoGpioOut
+from intel_iot.drivers.arduino.i2c import EdisonArduinoI2c
+from intel_iot.drivers.arduino.pwm import EdisonArduinoPwm
+from intel_iot.util import gpio
 
 ANALOGUE_DEPENDS = {
     10: GPIO_IN,
@@ -8,6 +13,13 @@ ANALOGUE_DEPENDS = {
 }
 
 PIN_CONFIG = {
+    "drivers": {
+        GPIO_IN: EdisonArduinoGpioIn,
+        GPIO_OUT: EdisonArduinoGpioOut,
+        ADC: EdisonArduinoAdc,
+        PWM: EdisonArduinoPwm,
+        I2C: EdisonArduinoI2c
+    },
     "pre_mux": {
         214: 0
     },
@@ -176,9 +188,7 @@ PIN_CONFIG = {
                 GPIO_IN: {"mux": {200: 0}},
                 GPIO_OUT: {"mux": {200: 0}},
                 ADC: {
-                    "mux": {
-                        200: 1
-                    },
+                    "mux": {200: 1},
                     "depends": ANALOGUE_DEPENDS,
                     "channel": 0,
                 }
@@ -194,9 +204,7 @@ PIN_CONFIG = {
                 GPIO_IN: {"mux": {201: 0}},
                 GPIO_OUT: {"mux": {201: 0}},
                 ADC: {
-                    "mux": {
-                        201: 1
-                    },
+                    "mux": {201: 1},
                     "depends": ANALOGUE_DEPENDS,
                     "channel": 1,
                 }
@@ -211,9 +219,7 @@ PIN_CONFIG = {
                 GPIO_IN: {"mux": {202: 0}},
                 GPIO_OUT: {"mux": {202: 0}},
                 ADC: {
-                    "mux": {
-                        202: 1
-                    },
+                    "mux": {202: 1},
                     "depends": ANALOGUE_DEPENDS,
                     "channel": 2,
                 }
@@ -228,9 +234,7 @@ PIN_CONFIG = {
                 GPIO_IN: {"mux": {203: 0}},
                 GPIO_OUT: {"mux": {203: 0}},
                 ADC: {
-                    "mux": {
-                        203: 1
-                    },
+                    "mux": {203: 1},
                     "depends": ANALOGUE_DEPENDS,
                     "channel": 3,
                 }
@@ -245,11 +249,13 @@ PIN_CONFIG = {
                 GPIO_IN: {"mux": {204: 0}},
                 GPIO_OUT: {"mux": {204: 0}},
                 ADC: {
-                    "mux": {
-                        204: 1
-                    },
+                    "mux": {204: 1},
                     "depends": ANALOGUE_DEPENDS,
                     "channel": 4,
+                },
+                I2C: {
+                    "mux": {204: 0},
+                    "depends": {19: I2C}
                 }
             },
         },
@@ -262,11 +268,13 @@ PIN_CONFIG = {
                 GPIO_IN: {"mux": {205: 0}},
                 GPIO_OUT: {"mux": {205: 0}},
                 ADC: {
-                    "mux": {
-                        205: 1
-                    },
+                    "mux": {205: 1},
                     "depends": ANALOGUE_DEPENDS,
                     "channel": 5,
+                },
+                I2C: {
+                    "mux": {205: 0},
+                    "depends": {18: I2C}
                 }
             },
         },
