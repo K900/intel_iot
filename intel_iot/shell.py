@@ -10,11 +10,8 @@ def sparkify(series):
         # Graph a baseline if every input value is equal.
         return ''.join([spark_chars[0] for _ in series])
     coefficient = (len(spark_chars) - 1.0) / data_range
-    return ''.join([
-        spark_chars[
-            int(round((x - minimum) * coefficient))
-        ] for x in series
-    ])
+    return ''.join([spark_chars[
+                    int(round((x - minimum) * coefficient))] for x in series])
 
 
 def main():
@@ -36,6 +33,7 @@ def main():
             print(sparkify(d), end='\r')
 
     import IPython
+
     IPython.embed()
 
 

@@ -7,9 +7,11 @@ ADC = "adc"
 PWM = "pwm"
 I2C = "i2c"
 
+
 def _apply_mux(conf):
     for pair in conf.items():
         gpio.configure_out(*pair)
+
 
 def _get_mode_config(conf, mode):
     pin_modes = conf["pin_modes"]
@@ -21,13 +23,16 @@ def _get_mode_config(conf, mode):
     except (KeyError, TypeError):
         return {}
 
+
 def _get_pin_config(conf, pin):
     return conf["pins"][pin]
+
 
 class Board:
     """
     Generic class for interfacing with a development board.
     """
+
     def setup(self, pin, mode):
         """
         Sets up a pin header for a specified interaction mode, then returns an object providing an API for it.
@@ -77,4 +82,3 @@ class Board:
         :return: The finished Board object.
         """
         self._config = config
-        self._drivers = drivers

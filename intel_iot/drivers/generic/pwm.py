@@ -8,6 +8,7 @@ class Pwm:
     """
     Generic PWM signal driver for Linux /sys/class/pwm interfaces.
     """
+
     def __init__(self, pin_config):
         conf = pin_config["pin_modes"][PWM]
         pwm_id = conf["pwm_id"]

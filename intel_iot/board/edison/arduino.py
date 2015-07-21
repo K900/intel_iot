@@ -1,9 +1,8 @@
 from intel_iot.board.generic import Board, GPIO_OUT, GPIO_IN, PWM, ADC, I2C
-from intel_iot.drivers.arduino.adc import EdisonArduinoAdc
-from intel_iot.drivers.arduino.gpio import EdisonArduinoGpioIn, EdisonArduinoGpioOut
-from intel_iot.drivers.arduino.i2c import EdisonArduinoI2c
-from intel_iot.drivers.arduino.pwm import EdisonArduinoPwm
-from intel_iot.util import gpio
+from intel_iot.drivers.edison.arduino.adc import EdisonArduinoAdc
+from intel_iot.drivers.edison.arduino.gpio import EdisonArduinoGpioIn, EdisonArduinoGpioOut
+from intel_iot.drivers.edison.arduino.i2c import EdisonArduinoI2c
+from intel_iot.drivers.edison.arduino.pwm import EdisonArduinoPwm
 
 ANALOGUE_DEPENDS = {
     10: GPIO_IN,

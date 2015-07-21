@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='intel_iot',
-    description = ('A library for interfacing with Intel IoT hardware based on the Quark SoC from Python 3.'),
-    long_description = open('README.md').read(),
+    description='A library for interfacing with Intel IoT hardware based on the Quark SoC from Python 3.',
+    long_description=open('README.md').read(),
     version='0.1.0',
     packages=find_packages(),
     entry_points={
@@ -12,13 +12,13 @@ setup(
     extras_require={
         'shell': ["IPython"]
     },
-    license='MIT', 
-    classifiers = [
+    license='MIT',
+    classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Operating System :: POSIX :: Linux",
         "Topic :: System :: Hardware",
         "License :: OSI Approved :: MIT License"
     ],
-    keywords = ['intel', 'edison', 'mraa', 'gpio']
- )
+    keywords=['intel', 'edison', 'mraa', 'gpio']
+)

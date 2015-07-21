@@ -21,7 +21,13 @@ def make_pin(gpio, pwm=None):
 
     return conf
 
+
 PIN_CONFIG = {
+    "drivers": {
+        GPIO_IN: GpioIn,
+        GPIO_OUT: GpioOut,
+        PWM: Pwm,
+    },
     "pins": {
         "J17-1": make_pin(182, 2),
         "J17-5": make_pin(135),
@@ -65,11 +71,6 @@ PIN_CONFIG = {
     }
 }
 
-DRIVERS = {
-    GPIO_IN: GpioIn,
-    GPIO_OUT: GpioOut,
-    PWM: Pwm,
-}
 
 class EdisonMiniBoard(Board):
     def _setup_i2c_pin(self, pin):
@@ -92,4 +93,5 @@ class EdisonMiniBoard(Board):
 
         return SMBus(6)
 
-board = EdisonMiniBoard(PIN_CONFIG, drivers=DRIVERS)
+
+board = EdisonMiniBoard(PIN_CONFIG)
