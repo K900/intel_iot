@@ -36,7 +36,6 @@ def set(pin, value):
     log.debug("Setting GPIO {} to value {}".format(pin, value))
     write_file(_make_path(pin, 'value'), str(value))
 
-
 def set_mode(pin, mode):
     write_file("/sys/kernel/debug/gpio_debug/gpio{}/current_pinmux".format(pin),
                "mode{}".format(mode))
