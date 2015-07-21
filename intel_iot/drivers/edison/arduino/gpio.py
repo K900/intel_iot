@@ -1,8 +1,8 @@
-from intel_iot.drivers.gpio import GpioIn, GpioOut
+from intel_iot.drivers.generic.gpio import GpioIn, GpioOut
 from intel_iot.util import gpio
 
 
-class EdisonArduinoGpioIn(GpioIn):
+class GpioIn(GpioIn):
     def __init__(self, pin_config):
         super().__init__(pin_config)
         gpio.configure_out(pin_config["out_pin"])
@@ -22,7 +22,7 @@ class EdisonArduinoGpioIn(GpioIn):
             gpio.configure_in(self._pullup_pin)
 
 
-class EdisonArduinoGpioOut(GpioOut):
+class GpioOut(GpioOut):
     def __init__(self, pin_config):
         super().__init__(pin_config)
         gpio.configure_out(pin_config["out_pin"], 1)

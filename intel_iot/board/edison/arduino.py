@@ -1,4 +1,8 @@
 from intel_iot.board.generic import Board, GPIO_OUT, GPIO_IN, PWM, ADC
+from intel_iot.drivers.edison.arduino.adc import Adc
+from intel_iot.drivers.edison.arduino.gpio import GpioIn, GpioOut
+from intel_iot.drivers.edison.arduino.pwm import Pwm
+from intel_iot.util import gpio
 
 ANALOGUE_DEPENDS = {
     10: GPIO_IN,
@@ -281,4 +285,23 @@ A3 = 17
 A4 = 18
 A5 = 19
 
-board = Board(PIN_CONFIG)
+
+DRIVERS = {
+    GPIO_IN: GpioIn,
+    GPIO_OUT: GpioOut,
+    ADC: Adc,
+    PWM: Pwm
+}
+
+class EdisonArduinoBoard(Board):
+    def setup_i2c(self):
+        from smbus import SMBus
+
+        self.setup(18, GPIO_IN)
+        gpio.set_mode(self._config["pins"][18]["gpio_pin"], 1)
+        self.setup(19, GPIO_IN)
+        gpio.set_mode(self._config["pins"][19]["gpio_pin"], 1)
+
+        return SMBus(6)
+
+board = EdisonArduinoBoard(PIN_CONFIG, drivers=DRIVERS)

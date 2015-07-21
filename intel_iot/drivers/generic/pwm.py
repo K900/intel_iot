@@ -12,9 +12,6 @@ class Pwm:
     )
 
     def __init__(self, pin_config):
-        gpio.configure_out(pin_config["out_pin"], 1)
-        gpio.configure_in(pin_config["pullup_pin"])
-
         conf = pin_config["pin_modes"]["PWM"]
         pwm_id = conf["pwm_id"]
         pwmchip_id = conf.get("pwmchip_id", 0)

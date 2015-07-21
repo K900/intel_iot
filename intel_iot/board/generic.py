@@ -1,21 +1,10 @@
-from intel_iot.drivers.adc import Adc
-from intel_iot.drivers.gpio import GpioIn, GpioOut
-from intel_iot.drivers.pwm import Pwm
 from intel_iot.util import gpio
-from intel_iot.util.file import write_file
 
 # Pin mode constants
 GPIO_IN = "gpio_in"
 GPIO_OUT = "gpio_out"
 ADC = "adc"
 PWM = "pwm"
-
-DRIVERS = {
-    GPIO_IN: GpioIn,
-    GPIO_OUT: GpioOut,
-    ADC: Adc,
-    PWM: Pwm
-}
 
 class Board:
     def setup(self, pin, mode):
@@ -48,11 +37,11 @@ class Board:
         gpio_pin = pin_config["gpio_pin"]
         gpio.export(gpio_pin)
 
-        write_file("/sys/kernel/debug/gpio_debug/gpio{}/current_pinmux".format(gpio_pin),
-                   "mode{}".format(mode_config.get("pin_mode", 0)))
+        gpio.set_mode(gpio_pin, mode_config.get("pin_mode", 0))
 
         _apply_mux(self._config.get("post_mux", {}))
-        return DRIVERS[mode](pin_config)
+        return self._drivers[mode](pin_config)
 
-    def __init__(self, config):
+    def __init__(self, config, drivers):
         self._config = config
+        self._drivers = drivers

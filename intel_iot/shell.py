@@ -19,10 +19,10 @@ def sparkify(series):
 
 def main():
     import logging
-    import intel_iot.board.edison
+    import intel_iot.board.edison.arduino
     import intel_iot.util.gpio
 
-    b = intel_iot.board.edison.board
+    b = intel_iot.board.edison.arduino.board
     g = intel_iot.util.gpio
 
     logging.basicConfig(level=logging.DEBUG)

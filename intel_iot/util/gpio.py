@@ -37,6 +37,10 @@ def set(pin, value):
     write_file(_make_path(pin, 'value'), str(value))
 
 
+def set_mode(pin, mode):
+    write_file("/sys/kernel/debug/gpio_debug/gpio{}/current_pinmux".format(pin),
+               "mode{}".format(mode))
+
 def configure_out(pin, value=0):
     export(pin)
     if value:
