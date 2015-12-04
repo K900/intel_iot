@@ -1,7 +1,6 @@
 import logging
 import os.path
 from functools import wraps
-
 from intel_iot.util.file import write_ignore_busy, write_file, read_file
 
 DIRECTION_IN = "in"
@@ -11,12 +10,7 @@ log = logging.getLogger("intel_iot.util.gpio")
 
 
 def _make_path(pin, option):
-    path = os.path.join("/sys/class/gpio/gpio{}/".format(pin), option)
-
-    if not os.path.exists(path):
-        raise IOError("Trying to access unexported GPIO!")
-
-    return path
+    return os.path.join("/sys/class/gpio/gpio{}/".format(pin), option)
 
 
 def export(gpio):
@@ -51,7 +45,7 @@ def set(gpio, value):
 def set_all(values):
     if values:
         for gpio, value in values.items():
-            set(gpio, value)
+            configure_out(gpio, value)
 
 
 @export_if_not_found
