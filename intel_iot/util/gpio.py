@@ -23,6 +23,7 @@ def export_if_not_found(func):
     def wrapper(gpio, *args, **kwargs):
         try:
             return func(gpio, *args, **kwargs)
+        # FIXME we probably don't want to be this greedy here
         except IOError:
             export(gpio)
             return func(gpio, *args, **kwargs)
@@ -36,6 +37,8 @@ def get(gpio):
 
 
 # noinspection PyShadowingBuiltins
+# This is pretty much always called as gpio.set(), and it's (technically) an internal API,
+# so I don't think it's a big deal.
 @export_if_not_found
 def set(gpio, value):
     log.debug("Setting GPIO {} to value {}".format(gpio, value))

@@ -14,6 +14,8 @@ def sparkify(series):
                     int(round((x - minimum) * coefficient))] for x in series])
 
 
+# noinspection PyUnusedLocal
+# These variables are later made available to the debug IPython shell (implicitly). We want to keep them around.
 def main():
     import logging
     import intel_iot.board.edison.arduino
@@ -26,12 +28,17 @@ def main():
 
     import collections
 
+    # noinspection PyUnusedLocal
     def graph_pin(p, n=80):
         d = collections.deque(maxlen=n)
         while True:
             d.append(p.value)
             print(sparkify(d), end='\r')
 
+    # noinspection PyPackageRequirements
+    # noinspection PyUnresolvedReferences
+    # The debug shell is completely optional, and PyCharm doesn't understand the concept of optional dependencies.
+    # However, this _will_ fail to run if IPython is not installed.
     import IPython
 
     IPython.embed()

@@ -2,6 +2,8 @@ from intel_iot.drivers.generic.gpio import GpioIn
 from intel_iot.util import gpio
 
 
+# noinspection PyAbstractClass
+# Once again, PyCharm does weird things with properties.
 class EdisonArduinoGpioIn(GpioIn):
     """
     Intel Edison Arduino board GPIO input driver. Provides pullup resistor control in addition to basic functionality.

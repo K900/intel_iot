@@ -39,8 +39,7 @@ pin = board.setup(1, GPIO_OUT)
 * разрешение АЦП - 10 бит
 
 # I2C (WIP)
-* `bus = board.setup(18, I2C).bus()`
+* `bus = board.setup(18, I2C)`
 * на больших платах одна шина, на маленьких - две
-* может не работать, будем тестировать
 * прогается через [smbus-cffi](https://github.com/bivab/smbus-cffi)
     * исходники сабжа с документацией [тут](https://github.com/bivab/smbus-cffi/blob/master/smbus/smbus.py)

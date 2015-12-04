@@ -5,12 +5,13 @@ setup(
     description='A library for interfacing with Intel IoT hardware based on the Quark SoC from Python 3.',
     long_description=open('README.md').read(),
     version='0.1.0',
-    packages=find_packages(),
+    packages=find_packages('intel_iot'),
     entry_points={
         'console_scripts': ['iot-shell=intel_iot.shell:main'],
     },
     extras_require={
-        'shell': ["IPython"]
+        'shell': ["IPython"],
+        'i2c': ["smbus-cffi"]
     },
     license='MIT',
     classifiers=[

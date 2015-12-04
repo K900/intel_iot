@@ -12,7 +12,7 @@ class GpioBase:
     @property
     def value(self):
         """
-        Get the current value of the GPIO.
+        The current value of the GPIO.
         :return: The current value of the GPIO.
         """
         return gpio.get(self._gpio)
@@ -20,7 +20,7 @@ class GpioBase:
 
 class GpioIn(GpioBase):
     """
-    Generic GPIO input driver. Provides sanity checking.
+    Generic GPIO input driver. Provides additional sanity checking by preventing writes.
     """
 
     def __init__(self, gpio_no):
@@ -28,6 +28,7 @@ class GpioIn(GpioBase):
         gpio.configure_in(self._gpio)
 
     # noinspection PyMethodOverriding
+    # PyCharm goes crazy when properties are involved. This is actually correct.
     @GpioBase.value.setter
     def value(self, value):
         raise NotImplementedError("Cannot write to read only GPIO!")
@@ -43,11 +44,7 @@ class GpioOut(GpioBase):
         gpio.configure_out(self._gpio)
 
     # noinspection PyMethodOverriding
+    # PyCharm goes crazy when properties are involved. This is actually correct.
     @GpioBase.value.setter
     def value(self, value):
-        """
-        Sets the current value of the GPIO.
-        :param value: The value to set.
-        :return:
-        """
         gpio.set(self._gpio, value)

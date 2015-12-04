@@ -14,19 +14,20 @@ However, it has been tested on multiple small projects and seems to work properl
 * No footguns
 
 ## Current features
-* Generic board configuration format
 * GPIO input/output
 * ADC input
 * PWM output
+* I2C (only one bus on the Edison mini board)
+* Generic board configuration format
 
 ## Supported hardware
 * Intel Edison Arduino breakout board
+* Intel Edison mini breakout board (essentially direct GPIO control)
 
 ## Limitations
-* I2C / SPI support is WIP (and will probably need a C extension)
-* No other hardware is supported as of now (Galileo Gen1 and Edison small breakout boards possible, we don't have any other hardware)
-* Some things may be inadvertently hardcoded to support the Edison Arduino board only
-* Documentation doesn't exist
+* SPI support is WIP (and will probably need a C extension)
+* No other hardware is supported as of now (Galileo Gen1 possible later, we don't have any other hardware)
+* No portable API (hardware detection, etc.)
 
 ## Non-goals
 * Very high performance

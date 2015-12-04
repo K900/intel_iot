@@ -1,6 +1,6 @@
 from functools import wraps
 
-from intel_iot.board.generic import Board, GPIO_OUT, GPIO_IN, PWM, ADC
+from intel_iot.board.generic import Board, GPIO_OUT, GPIO_IN, PWM, ADC, I2C
 from intel_iot.drivers.generic.gpio import GpioOut
 from intel_iot.drivers.generic.iiovoltage import IioVoltage
 from intel_iot.drivers.generic.pwm import Pwm
@@ -35,9 +35,9 @@ gpio_map = {
 
 def ea_setup(func):
     @wraps(func)
-    def wrapper(board):
+    def wrapper(brd):
         u_gpio.set(214, 0),
-        result = func(board)
+        result = func(brd)
         u_gpio.set(214, 1)
         return result
 
@@ -85,11 +85,11 @@ def pwm(pin, pwm_id, mux=None):
 
 def adc(pin, channel, mux=None):
     @ea_setup
-    def setup_adc(board):
+    def setup_adc(brd):
         setup_pin(pin, 0, 0, mux)
 
         for dep in (10, 11, 12, 13):
-            board.setup(dep, GPIO_IN)
+            brd.setup(dep, GPIO_IN)
 
         return IioVoltage(device_id=1, channel=channel)
 
@@ -97,6 +97,29 @@ def adc(pin, channel, mux=None):
         ADC: setup_adc
     }
 
+
+def i2c():
+    def setup_i2c(brd):
+        # noinspection PyPackageRequirements
+        # noinspection PyUnresolvedReferences
+        # Another optional dependency that doesn't even have to be installed.
+        from smbus import SMBus
+
+        u_gpio.set_all({
+            204: 0,
+            205: 0
+        })
+
+        def setup(pin):
+            brd.setup(pin, GPIO_IN)
+            u_gpio.set_mode(pin, 1)
+
+        setup(18)
+        setup(19)
+
+        return SMBus(6)
+
+    return {I2C: setup_i2c}
 
 PIN_CAPS = {
     0: gpio(0),
@@ -150,10 +173,12 @@ PIN_CAPS = {
     18: combine(
         gpio(18, mux={204: 0}),
         adc(18, channel=4, mux={204: 1}),
+        i2c(),
     ),
     19: combine(
         gpio(19, mux={205: 0}),
         adc(19, channel=4, mux={205: 1}),
+        i2c(),
     )
 }
 # I2C: {
