@@ -6,8 +6,8 @@ class GpioBase:
     Generic GPIO (digital I/O) base class. Don't create instances of this directly, use GpioIn/GpioOut instead.
     """
 
-    def __init__(self, pin_config):
-        self._gpio_pin = pin_config["gpio_pin"]
+    def __init__(self, gpio_no):
+        self._gpio = gpio_no
 
     @property
     def value(self):
@@ -15,7 +15,7 @@ class GpioBase:
         Get the current value of the GPIO.
         :return: The current value of the GPIO.
         """
-        return gpio.get(self._gpio_pin)
+        return gpio.get(self._gpio)
 
 
 class GpioIn(GpioBase):
@@ -23,9 +23,8 @@ class GpioIn(GpioBase):
     Generic GPIO input driver. Provides sanity checking.
     """
 
-    def __init__(self, pin_config):
-        super().__init__(pin_config)
-        gpio.configure_in(self._gpio_pin)
+    def _apply(self):
+        gpio.configure_in(self._gpio)
 
     # noinspection PyMethodOverriding
     @GpioBase.value.setter
@@ -38,10 +37,8 @@ class GpioOut(GpioBase):
     Generic GPIO output driver.
     """
 
-    def __init__(self, pin_config):
-        super().__init__(pin_config)
-        self._gpio_pin = pin_config["gpio_pin"]
-        gpio.configure_out(self._gpio_pin)
+    def _apply(self):
+        gpio.configure_out(self._gpio)
 
     # noinspection PyMethodOverriding
     @GpioBase.value.setter
@@ -51,4 +48,4 @@ class GpioOut(GpioBase):
         :param value: The value to set.
         :return:
         """
-        gpio.set(self._gpio_pin, value)
+        gpio.set(self._gpio, value)

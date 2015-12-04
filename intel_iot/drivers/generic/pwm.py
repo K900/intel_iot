@@ -9,13 +9,9 @@ class Pwm:
     Generic PWM signal driver for Linux /sys/class/pwm interfaces.
     """
 
-    def __init__(self, pin_config):
-        conf = pin_config["pin_modes"][PWM]
-        pwm_id = conf["pwm_id"]
-        pwmchip_id = conf.get("pwmchip_id", 0)
-
-        self._sysfs_root = "/sys/class/pwm/pwmchip{}/pwm{}/".format(pwmchip_id, pwm_id)
-        write_ignore_busy("/sys/class/pwm/pwmchip{}/export".format(pwmchip_id), str(pwm_id))
+    def __init__(self, chip_id, pwm_id):
+        self._sysfs_root = "/sys/class/pwm/pwmchip{}/pwm{}/".format(chip_id, pwm_id)
+        write_ignore_busy("/sys/class/pwm/pwmchip{}/export".format(chip_id), str(pwm_id))
 
     def _option_path(self, option):
         return os.path.join(self._sysfs_root, option)

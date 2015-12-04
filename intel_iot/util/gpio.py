@@ -1,5 +1,6 @@
 import logging
 import os.path
+from functools import wraps
 
 from intel_iot.util.file import write_ignore_busy, write_file, read_file
 
@@ -10,47 +11,75 @@ log = logging.getLogger("intel_iot.util.gpio")
 
 
 def _make_path(pin, option):
-    return os.path.join("/sys/class/gpio/gpio{}/".format(pin), option)
+    path = os.path.join("/sys/class/gpio/gpio{}/".format(pin), option)
+
+    if not os.path.exists(path):
+        raise FileNotFoundError("Trying to access unexported GPIO!")
+
+    return path
 
 
-def export(pin):
-    log.debug("Exporting GPIO {}".format(pin))
-    write_ignore_busy("/sys/class/gpio/export", str(pin))
+def export(gpio):
+    log.debug("Exporting GPIO {}".format(gpio))
+    write_ignore_busy("/sys/class/gpio/export", str(gpio))
 
 
-def set_direction(pin, direction):
-    log.debug("Setting GPIO {} to direction {}".format(pin, direction))
-    write_file(_make_path(pin, 'direction'), direction)
+def export_if_not_found(func):
+    @wraps(func)
+    def wrapper(gpio, *args, **kwargs):
+        try:
+            return func(gpio, *args, **kwargs)
+        except FileNotFoundError:
+            export(gpio)
+            return func(gpio, *args, **kwargs)
+
+    return wrapper
 
 
-def get_direction(pin):
-    return read_file(_make_path(pin, 'direction'))
-
-
-def get(pin):
-    return int(read_file(_make_path(pin, 'value')))
+@export_if_not_found
+def get(gpio):
+    return int(read_file(_make_path(gpio, 'value')))
 
 
 # noinspection PyShadowingBuiltins
-def set(pin, value):
-    log.debug("Setting GPIO {} to value {}".format(pin, value))
-    write_file(_make_path(pin, 'value'), str(value))
+@export_if_not_found
+def set(gpio, value):
+    log.debug("Setting GPIO {} to value {}".format(gpio, value))
+    write_file(_make_path(gpio, 'value'), str(value))
 
 
-def set_mode(pin, mode):
-    write_file("/sys/kernel/debug/gpio_debug/gpio{}/current_pinmux".format(pin),
+def set_all(values):
+    if values:
+        for gpio, value in values.items():
+            set(gpio, value)
+
+
+@export_if_not_found
+def get_direction(gpio):
+    return read_file(_make_path(gpio, 'direction'))
+
+
+@export_if_not_found
+def set_direction(gpio, direction):
+    log.debug("Setting GPIO {} to direction {}".format(gpio, direction))
+    write_file(_make_path(gpio, 'direction'), direction)
+
+
+@export_if_not_found
+def set_mode(gpio, mode):
+    write_file("/sys/kernel/debug/gpio_debug/gpio{}/current_pinmux".format(gpio),
                "mode{}".format(mode))
 
 
-def configure_out(pin, value=0):
-    export(pin)
+@export_if_not_found
+def configure_out(gpio, value=0):
     if value:
         direction = "high"
     else:
         direction = "low"
-    set_direction(pin, direction)
+    set_direction(gpio, direction)
 
 
+@export_if_not_found
 def configure_in(pin):
-    export(pin)
     set_direction(pin, DIRECTION_IN)

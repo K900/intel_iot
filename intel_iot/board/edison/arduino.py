@@ -1,284 +1,166 @@
-from intel_iot.board.generic import Board, GPIO_OUT, GPIO_IN, PWM, ADC, I2C
-from intel_iot.drivers.edison.arduino.adc import EdisonArduinoAdc
-from intel_iot.drivers.edison.arduino.gpio import EdisonArduinoGpioIn, EdisonArduinoGpioOut
-from intel_iot.drivers.edison.arduino.i2c import EdisonArduinoI2c
-from intel_iot.drivers.edison.arduino.pwm import EdisonArduinoPwm
+from functools import wraps
 
-ANALOGUE_DEPENDS = {
-    10: GPIO_IN,
-    11: GPIO_IN,
-    12: GPIO_IN,
-    13: GPIO_IN
+from intel_iot.board.generic import Board, GPIO_OUT, GPIO_IN, PWM, ADC
+from intel_iot.drivers.generic.gpio import GpioOut
+from intel_iot.drivers.generic.iiovoltage import IioVoltage
+from intel_iot.drivers.generic.pwm import Pwm
+from intel_iot.drivers.edison.arduino.gpio import EdisonArduinoGpioIn
+from intel_iot.util.dicts import combine
+from intel_iot.util import gpio as u_gpio
+
+gpio_map = {
+    # board pin -> (value, direction, pullup)
+    0: (130, 248, 216),
+    1: (131, 249, 217),
+    2: (128, 250, 218),
+    3: (12, 251, 219),
+    4: (129, 252, 220),
+    5: (13, 253, 221),
+    6: (182, 254, 222),
+    7: (48, 255, 223),
+    8: (49, 256, 224),
+    9: (183, 257, 225),
+    10: (41, 258, 226),
+    11: (43, 259, 227),
+    12: (42, 260, 228),
+    13: (40, 261, 229),
+    14: (44, 232, 208),
+    15: (45, 233, 209),
+    16: (46, 234, 210),
+    17: (47, 235, 211),
+    18: (14, 236, 212),
+    19: (165, 237, 213)
 }
 
-PIN_CONFIG = {
-    "drivers": {
-        GPIO_IN: EdisonArduinoGpioIn,
-        GPIO_OUT: EdisonArduinoGpioOut,
-        ADC: EdisonArduinoAdc,
-        PWM: EdisonArduinoPwm,
-        I2C: EdisonArduinoI2c
-    },
-    "pre_mux": {
-        214: 0
-    },
-    "post_mux": {
-        214: 1
-    },
-    "pins": {
-        0: {
-            "gpio_pin": 130,
-            "out_pin": 248,
-            "pullup_pin": 216,
 
-            "pin_modes": [GPIO_IN, GPIO_OUT]
-        },
-        1: {
-            "gpio_pin": 131,
-            "out_pin": 249,
-            "pullup_pin": 217,
+def ea_setup(func):
+    @wraps(func)
+    def wrapper(board):
+        u_gpio.set(214, 0),
+        result = func(board)
+        u_gpio.set(214, 1)
+        return result
 
-            "pin_modes": [GPIO_IN, GPIO_OUT]
-        },
-        2: {
-            "gpio_pin": 128,
-            "out_pin": 250,
-            "pullup_pin": 218,
+    return wrapper
 
-            "pin_modes": [GPIO_IN, GPIO_OUT]
-        },
-        3: {
-            "gpio_pin": 12,
-            "out_pin": 251,
-            "pullup_pin": 219,
 
-            "pin_modes": {
-                GPIO_IN: {},
-                GPIO_OUT: {},
-                PWM: {
-                    "pin_mode": 1,
-                    "pwm_id": 0
-                }
-            }
-        },
-        4: {
-            "gpio_pin": 129,
-            "out_pin": 252,
-            "pullup_pin": 220,
+def setup_pin(pin, value_pin_mode, direction_value, mux):
+    value, direction, pullup = gpio_map[pin]
 
-            "pin_modes": [GPIO_IN, GPIO_OUT]
-        },
-        5: {
-            "gpio_pin": 13,
-            "out_pin": 253,
-            "pullup_pin": 221,
+    u_gpio.configure_in(pullup)
+    u_gpio.configure_out(direction, direction_value)
+    u_gpio.set_all(mux)
+    u_gpio.set_mode(value, value_pin_mode)
 
-            "pin_modes": {
-                GPIO_IN: {},
-                GPIO_OUT: {},
-                PWM: {
-                    "pin_mode": 1,
-                    "pwm_id": 1
-                }
-            }
-        },
-        6: {
-            "gpio_pin": 182,
-            "out_pin": 254,
-            "pullup_pin": 222,
 
-            "pin_modes": {
-                GPIO_IN: {},
-                GPIO_OUT: {},
-                PWM: {
-                    "pin_mode": 1,
-                    "pwm_id": 2
-                }
-            }
-        },
-        7: {
-            "gpio_pin": 48,
-            "out_pin": 255,
-            "pullup_pin": 223,
+def gpio(pin, mux=None):
+    value, direction, pullup = gpio_map[pin]
 
-            "pin_modes": [GPIO_IN, GPIO_OUT]
-        },
-        8: {
-            "gpio_pin": 49,
-            "out_pin": 256,
-            "pullup_pin": 224,
+    @ea_setup
+    def setup_gpio_in(_):
+        setup_pin(pin, 0, 0, mux)
+        return EdisonArduinoGpioIn(value=value, direction=direction, pullup=pullup)
 
-            "pin_modes": [GPIO_IN, GPIO_OUT]
-        },
-        9: {
-            "gpio_pin": 183,
-            "out_pin": 257,
-            "pullup_pin": 225,
+    @ea_setup
+    def setup_gpio_out(_):
+        setup_pin(pin, 0, 1, mux)
+        return GpioOut(value)
 
-            "pin_modes": {
-                GPIO_IN: {},
-                GPIO_OUT: {},
-                PWM: {
-                    "pin_mode": 1,
-                    "pwm_id": 3
-                }
-            }
-        },
-        10: {
-            "gpio_pin": 41,
-            "out_pin": 258,
-            "pullup_pin": 226,
+    return {
+        GPIO_IN: setup_gpio_in,
+        GPIO_OUT: setup_gpio_out,
+    }
 
-            "pin_modes": {
-                GPIO_IN: {"mux": {263: 1, 240: 0}},
-                GPIO_OUT: {"mux": {263: 1, 240: 0}},
-                PWM: {
-                    "pin_mode": 1,
-                    "pwm_id": 3,
-                    "mux": {
-                        263: 0
-                    }
-                }
-            }
-        },
-        11: {
-            "gpio_pin": 43,
-            "out_pin": 259,
-            "pullup_pin": 227,
 
-            "pin_modes": {
-                GPIO_IN: {"mux": {262: 1, 241: 0}},
-                GPIO_OUT: {"mux": {262: 1, 241: 0}},
-                PWM: {
-                    "pin_mode": 1,
-                    "pwm_id": 3,
-                    "mux": {
-                        262: 0
-                    }
-                }
-            }
-        },
-        12: {
-            "gpio_pin": 42,
-            "out_pin": 260,
-            "pullup_pin": 228,
+def pwm(pin, pwm_id, mux=None):
+    @ea_setup
+    def setup_pwm(_):
+        setup_pin(pin, 1, 1, mux)
+        return Pwm(chip_id=0, pwm_id=pwm_id)
 
-            "pin_modes": {
-                GPIO_IN: {"mux": {242: 0}},
-                GPIO_OUT: {"mux": {242: 0}}
-            }
-        },
-        13: {
-            "gpio_pin": 40,
-            "out_pin": 261,
-            "pullup_pin": 229,
+    return {
+        PWM: setup_pwm
+    }
 
-            "pin_modes": {
-                GPIO_IN: {"mux": {243: 0}},
-                GPIO_OUT: {"mux": {243: 0}}
-            }
-        },
-        14: {
-            "gpio_pin": 44,
-            "out_pin": 232,
-            "pullup_pin": 208,
 
-            "pin_modes": {
-                GPIO_IN: {"mux": {200: 0}},
-                GPIO_OUT: {"mux": {200: 0}},
-                ADC: {
-                    "mux": {200: 1},
-                    "depends": ANALOGUE_DEPENDS,
-                    "channel": 0,
-                }
-            },
-        },
+def adc(pin, channel, mux=None):
+    @ea_setup
+    def setup_adc(board):
+        setup_pin(pin, 0, 0, mux)
 
-        15: {
-            "gpio_pin": 45,
-            "out_pin": 233,
-            "pullup_pin": 209,
+        for dep in (10, 11, 12, 13):
+            board.setup(dep, GPIO_IN)
 
-            "pin_modes": {
-                GPIO_IN: {"mux": {201: 0}},
-                GPIO_OUT: {"mux": {201: 0}},
-                ADC: {
-                    "mux": {201: 1},
-                    "depends": ANALOGUE_DEPENDS,
-                    "channel": 1,
-                }
-            },
-        },
-        16: {
-            "gpio_pin": 46,
-            "out_pin": 234,
-            "pullup_pin": 210,
+        return IioVoltage(device_id=1, channel=channel)
 
-            "pin_modes": {
-                GPIO_IN: {"mux": {202: 0}},
-                GPIO_OUT: {"mux": {202: 0}},
-                ADC: {
-                    "mux": {202: 1},
-                    "depends": ANALOGUE_DEPENDS,
-                    "channel": 2,
-                }
-            },
-        },
-        17: {
-            "gpio_pin": 47,
-            "out_pin": 235,
-            "pullup_pin": 211,
+    return {
+        ADC: setup_adc
+    }
 
-            "pin_modes": {
-                GPIO_IN: {"mux": {203: 0}},
-                GPIO_OUT: {"mux": {203: 0}},
-                ADC: {
-                    "mux": {203: 1},
-                    "depends": ANALOGUE_DEPENDS,
-                    "channel": 3,
-                }
-            },
-        },
-        18: {
-            "gpio_pin": 14,
-            "out_pin": 236,
-            "pullup_pin": 212,
 
-            "pin_modes": {
-                GPIO_IN: {"mux": {204: 0}},
-                GPIO_OUT: {"mux": {204: 0}},
-                ADC: {
-                    "mux": {204: 1},
-                    "depends": ANALOGUE_DEPENDS,
-                    "channel": 4,
-                },
-                I2C: {
-                    "mux": {204: 0},
-                    "depends": {19: I2C}
-                }
-            },
-        },
-        19: {
-            "gpio_pin": 165,
-            "out_pin": 237,
-            "pullup_pin": 213,
-
-            "pin_modes": {
-                GPIO_IN: {"mux": {205: 0}},
-                GPIO_OUT: {"mux": {205: 0}},
-                ADC: {
-                    "mux": {205: 1},
-                    "depends": ANALOGUE_DEPENDS,
-                    "channel": 5,
-                },
-                I2C: {
-                    "mux": {205: 0},
-                    "depends": {18: I2C}
-                }
-            },
-        },
-    },
+PIN_CAPS = {
+    0: gpio(0),
+    1: gpio(1),
+    2: gpio(2),
+    3: combine(
+        gpio(2),
+        pwm(3, pwm_id=0),
+    ),
+    4: gpio(4),
+    5: combine(
+        gpio(5),
+        pwm(5, pwm_id=1),
+    ),
+    6: combine(
+        gpio(6),
+        pwm(6, pwm_id=2),
+    ),
+    7: gpio(7),
+    8: gpio(8),
+    9: combine(
+        gpio(9),
+        pwm(9, pwm_id=3),
+    ),
+    10: combine(
+        gpio(10, mux={263: 1, 240: 0}),
+        pwm(10, pwm_id=4, mux={263: 0}),
+    ),
+    11: combine(
+        gpio(11, mux={262: 1, 241: 0}),
+        pwm(11, pwm_id=5, mux={262: 0}),
+    ),
+    12: gpio(12, mux={242: 0}),
+    13: gpio(13, mux={243: 0}),
+    14: combine(
+        gpio(14, mux={200: 0}),
+        adc(14, channel=0, mux={200: 1}),
+    ),
+    15: combine(
+        gpio(15, mux={201: 0}),
+        adc(15, channel=1, mux={201: 1})
+    ),
+    16: combine(
+        gpio(16, mux={202: 0}),
+        adc(16, channel=2, mux={202: 0})
+    ),
+    17: combine(
+        gpio(17, mux={203: 0}),
+        adc(17, channel=3, mux={203: 1}),
+    ),
+    18: combine(
+        gpio(18, mux={204: 0}),
+        adc(18, channel=4, mux={204: 1}),
+    ),
+    19: combine(
+        gpio(19, mux={205: 0}),
+        adc(19, channel=4, mux={205: 1}),
+    )
 }
+# I2C: {
+#     "mux": {204: 0, 205: 0},
+#     "depends": {18: I2C, 19: I2C}
+# }
+# bus 6
 
 # Pin aliases
 A0 = 14
@@ -288,4 +170,4 @@ A3 = 17
 A4 = 18
 A5 = 19
 
-board = Board(PIN_CONFIG)
+board = Board(PIN_CAPS)
