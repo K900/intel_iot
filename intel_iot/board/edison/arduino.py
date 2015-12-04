@@ -181,11 +181,6 @@ PIN_CAPS = {
         i2c(),
     )
 }
-# I2C: {
-#     "mux": {204: 0, 205: 0},
-#     "depends": {18: I2C, 19: I2C}
-# }
-# bus 6
 
 # Pin aliases
 A0 = 14
