@@ -14,7 +14,7 @@ def _make_path(pin, option):
     path = os.path.join("/sys/class/gpio/gpio{}/".format(pin), option)
 
     if not os.path.exists(path):
-        raise FileNotFoundError("Trying to access unexported GPIO!")
+        raise IOError("Trying to access unexported GPIO!")
 
     return path
 
@@ -29,7 +29,7 @@ def export_if_not_found(func):
     def wrapper(gpio, *args, **kwargs):
         try:
             return func(gpio, *args, **kwargs)
-        except FileNotFoundError:
+        except IOError:
             export(gpio)
             return func(gpio, *args, **kwargs)
 
