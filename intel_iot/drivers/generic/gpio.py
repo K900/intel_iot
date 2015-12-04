@@ -23,7 +23,8 @@ class GpioIn(GpioBase):
     Generic GPIO input driver. Provides sanity checking.
     """
 
-    def _apply(self):
+    def __init__(self, gpio_no):
+        super().__init__(gpio_no)
         gpio.configure_in(self._gpio)
 
     # noinspection PyMethodOverriding
@@ -37,7 +38,8 @@ class GpioOut(GpioBase):
     Generic GPIO output driver.
     """
 
-    def _apply(self):
+    def __init__(self, gpio_no):
+        super().__init__(gpio_no)
         gpio.configure_out(self._gpio)
 
     # noinspection PyMethodOverriding

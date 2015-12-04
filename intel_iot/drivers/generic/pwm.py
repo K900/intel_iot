@@ -13,6 +13,9 @@ class Pwm:
         self._sysfs_root = "/sys/class/pwm/pwmchip{}/pwm{}/".format(chip_id, pwm_id)
         write_ignore_busy("/sys/class/pwm/pwmchip{}/export".format(chip_id), str(pwm_id))
 
+        self.enabled = False
+        self.duty_cycle = 0
+
     def _option_path(self, option):
         return os.path.join(self._sysfs_root, option)
 
