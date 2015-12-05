@@ -8,9 +8,8 @@ class EdisonArduinoGpioIn(GpioIn):
     """
     Intel Edison Arduino board GPIO input driver. Provides pullup resistor control in addition to basic functionality.
     """
-    def __init__(self, value, direction, pullup):
+    def __init__(self, value, pullup):
         super().__init__(value)
-        self._direction = direction
         self._pullup = pullup
 
     @property

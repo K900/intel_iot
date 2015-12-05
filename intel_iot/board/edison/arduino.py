@@ -59,7 +59,7 @@ def gpio(pin, mux=None):
     @ea_setup
     def setup_gpio_in(_):
         setup_pin(pin, 0, 0, mux)
-        return EdisonArduinoGpioIn(value=value, direction=direction, pullup=pullup)
+        return EdisonArduinoGpioIn(value=value, pullup=pullup)
 
     @ea_setup
     def setup_gpio_out(_):
